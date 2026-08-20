@@ -67,8 +67,8 @@ int main(void)
 		    SEND_HEX_BEACON(BEACON_TYPE_2, sizeof(BEACON_TYPE_2));
 		    delay_ms(5000U);
         }
-            memset(uart2_rx_buffer, 0, sizeof(uart2_rx_buffer));
-            uart2_rx_buffer_index = 0;
+        memset(uart2_rx_buffer, 0, sizeof(uart2_rx_buffer));
+        uart2_rx_buffer_index = 0;
     }
     return 0;
 }
