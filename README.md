@@ -30,10 +30,10 @@ The UART interface uses the following configuration:
 
 | Parameter | Configuration |
 |---|---|
-| Peripheral | LPUART1 |
+| Peripheral | UART2 |
 | TX Pin | PA2 |
 | RX Pin | PA3 |
-| Alternate Function | AF8 |
+| Alternate Function | AF7 |
 | Baud Rate | 115200 |
 | Data Bits | 8 |
 | Parity | None |
@@ -45,8 +45,8 @@ The UART interface uses the following configuration:
 ```text
 STM32WL55JC2
 
-PA2 ───────────────► LPUART1_TX
-PA3 ◄─────────────── LPUART1_RX
+PA2 ───────────────► UART2_TX
+PA3 ◄─────────────── UART2_RX
 ```
 
 > **Note:** The UART peripheral and alternate-function configuration must match the actual STM32WL board routing used by the project.
