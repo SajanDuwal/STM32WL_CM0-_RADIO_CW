@@ -41,16 +41,34 @@ PA3 ◄─────────────── USART2_RX
 Serial Monitor
 
 Send `0xAA` over USART2 to trigger an 18 WPM CW transmission sequence:
+```
 
-​```
+```markdown
+## CW Transmission Test
+
+**Command:** `0xAA`  
+**Mode:** Continuous Wave (CW)  
+**Speed:** 18 WPM  
+**Target:** STM32WL55JC2 CM0+  
+
+### Result
+
+:white_check_mark: **CW transmission started successfully.**
+
+### UART Output
+
+```text
 ================================
- STM32WL55JC2 CM0+ BARE_METAL 
+ STM32WL55JC2 CM0+ BARE_METAL
 ================================
 1. Send 0xAA for CW @ 18WPM
 Waiting to receive CMD.....
+
 ---- Sent hex encoded message: "AA" ----
+
 Received: 1 bytes
-AA 
+AA
+
 CW transmission Started
 CW Byte = B1
 CW Byte = 34
@@ -62,7 +80,7 @@ CW Byte = 17
 CW Byte = 00
 CW Byte = 00
 CW Byte = 00
-​```
+```
 
 ## 📁 Repository Structure
 To build this project, you need the official STMicroelectronics CMSIS/Device files. The repository expects a specific folder structure where the official firmware package sits right alongside your project directory inside a shared base folder:
