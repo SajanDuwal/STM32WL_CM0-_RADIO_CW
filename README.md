@@ -36,12 +36,9 @@ PA2 ───────────────► USART2_TX
 PA3 ◄─────────────── USART2_RX
 ```
 
+### Example: Triggering CW Transmission
 ```text
 Serial Monitor
-
-SEND 'AA' in HEX Format 
-```
-### Example: Triggering CW Transmission
 
 Send `0xAA` over USART2 to trigger an 18 WPM CW transmission sequence:
 
