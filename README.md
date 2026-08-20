@@ -1,25 +1,39 @@
 # STM32WL Cortex-M0+ Bare-Metal CW Radio Driver
 
-A lightweight, **bare-metal CW-RADIO Transmitter driver** written from scratch for the **ARM Cortex-M0+ core** of the **STM32WL microcontroller M0+** . 
+A lightweight **bare-metal CW radio transmitter driver** written for the **ARM Cortex-M0+ core** of the dual-core STM32WL microcontroller.
+
+The project demonstrates direct low-level control of the STM32WL radio subsystem from the CM0+ core without using an RTOS.
 
 ## 🚀 Features
-* **Cortex-M0+ Optimization:** Specifically configured for the low-power secondary core (CM0+) of the dual-core STM32WL architecture.
-* **Efficient Polling-based Transmission:** Simple APIs to transmit single bytes or entire strings over serial.
-* **Efficient Interrupt Receiverer:** Simple APIs to Receive single bytes or entire strings over serial.
-* **Custom Baud Rate Calculator:** Demonstrates configuring the `USART_BRR` register based on peripheral clock speeds.
-* **Ring Buffer and IQR inrerface:** Organize the received bytes from the RX-line interrupt.
-* **CW-Transmission:** CW at 18 WPM.
 
-# 📡 USART2 Configuration
+- **Cortex-M0+ Bare-Metal**
+  - Specifically designed for the low-power secondary CM0+ core of the STM32WL dual-core architecture.
 
-The UART driver uses USART2 with the following configuration:
+- **Polling-Based Transmission**
+  - Simple APIs for transmitting data over the serial interface.
+
+- **Interrupt-Based Receiver**
+  - UART reception using interrupts.
+
+- **Ring Buffer**
+  - Organizes received bytes from the UART RX interrupt.
+
+- **Custom Baud Rate Configuration**
+  - Demonstrates configuring the UART baud-rate register based on the peripheral clock.
+
+- **CW Transmission**
+  - Generates an 18 WPM CW transmission sequence using the STM32WL radio.
+
+## 📡 UART Configuration
+
+The UART interface uses the following configuration:
 
 | Parameter | Configuration |
 |---|---|
-| Peripheral | USART2 |
+| Peripheral | LPUART1 |
 | TX Pin | PA2 |
 | RX Pin | PA3 |
-| Alternate Function | AF7 |
+| Alternate Function | AF8 |
 | Baud Rate | 115200 |
 | Data Bits | 8 |
 | Parity | None |
@@ -31,25 +45,36 @@ The UART driver uses USART2 with the following configuration:
 ```text
 STM32WL55JC2
 
-PA2 ───────────────► USART2_TX
-
-PA3 ◄─────────────── USART2_RX
+PA2 ───────────────► LPUART1_TX
+PA3 ◄─────────────── LPUART1_RX
 ```
 
-### Example: Triggering CW Transmission
+> **Note:** The UART peripheral and alternate-function configuration must match the actual STM32WL board routing used by the project.
+
+## 📡 Triggering CW Transmission
+
+Send the command `0xAA` through the UART interface to trigger the CW transmission sequence.
+
 ```text
 Serial Monitor
-
-Send `0xAA` over USART2 to trigger an 18 WPM CW transmission sequence:
+     │
+     │  0xAA
+     ▼
+STM32WL55JC2 CM0+
+     │
+     ▼
+CW Transmission
+     │
+     ▼
+18 WPM
 ```
 
-```markdown
 ## CW Transmission Test
 
 **Command:** `0xAA`  
 **Mode:** Continuous Wave (CW)  
 **Speed:** 18 WPM  
-**Target:** STM32WL55JC2 CM0+  
+**Target:** STM32WL55JC2 CM0+
 
 ### Result
 
@@ -59,17 +84,17 @@ Send `0xAA` over USART2 to trigger an 18 WPM CW transmission sequence:
 
 ```text
 ================================
- STM32WL55JC2 CM0+ BARE_METAL
+ STM32WL55JC2 CM0+ BARE-METAL
 ================================
-1. Send 0xAA for CW @ 18WPM
+1. Send 0xAA for CW @ 18 WPM
 Waiting to receive CMD.....
 
 ---- Sent hex encoded message: "AA" ----
 
-Received: 1 bytes
+Received: 1 byte
 AA
 
-CW transmission Started
+CW transmission started
 CW Byte = B1
 CW Byte = 34
 CW Byte = AA
@@ -83,54 +108,171 @@ CW Byte = 00
 ```
 
 ## 📁 Repository Structure
-To build this project, you need the official STMicroelectronics CMSIS/Device files. The repository expects a specific folder structure where the official firmware package sits right alongside your project directory inside a shared base folder:
+
+The project uses the STM32CubeWL firmware package for the required CMSIS, device definitions, and HAL components.
+
+The expected directory structure is:
 
 ```text
 base_folder/
-├── STM32WL_CM0-_RADIO_BARE_METAL/  <-- (This project folder)
-└── STM32Cube_FW_WL_V1.6.0/         <-- (Official ST Firmware package)
+│
+├── STM32WL_CM0_RADIO_BARE_METAL/    ← This project
+│
+└── STM32Cube_FW_WL_V1.6.0/          ← STM32CubeWL v1.6.0
 ```
+
+The STM32CubeWL firmware package is intentionally **not included in this repository**.
 
 ## 🔧 Building & Flashing
 
-### 1. Prerequisites & Toolchain
-Ensure you have the ARM GNU Toolchain installed on your host machine:
+### 1. Prerequisites
+
+Install the ARM GNU Toolchain and verify that it is available:
+
 ```bash
 arm-none-eabi-gcc --version
 ```
 
-### 2. Setup and Cloning Instructions
-Instead of downloading a massive full framework zip, you can bypass the heavy overhead by cloning just the required `v1.6.0` firmware package components locally using these commands:
+You will also need:
 
-1. **Create and enter your main base folder:**
-   ```bash
-   mkdir your_base_folder && cd your_base_folder
-   ```
-2. **Clone this Bare-Metal repository:**
-   ```bash
-   git clone https://github.com
-   ```
-3. **Clone the required STM32CubeWL v1.6.0 firmware repository right next to it:**
-   ```bash
-   git clone --branch v1.6.0 --depth 1 https://github.com/STMicroelectronics/STM32CubeWL.git STM32Cube_FW_WL_V1.6.0
-   ```
+- GNU Make
+- OpenOCD
+- STM32WL55JC development board
+- USB connection for programming/debugging
 
-### 3. Compile the Binary
-Navigate into your project folder and compile using the local paths:
+### 2. Clone the Repositories
+
+Create a common base directory:
+
 ```bash
-cd STM32WL_CM0-_UART_BARE_METAL
+mkdir your_base_folder
+cd your_base_folder
+```
+
+Clone this bare-metal project:
+
+```bash
+git clone <YOUR_REPOSITORY_URL>
+```
+
+Clone the required STM32CubeWL v1.6.0 firmware package next to it:
+
+```bash
+git clone --branch v1.6.0 --depth 1 \
+https://github.com/STMicroelectronics/STM32CubeWL.git \
+STM32Cube_FW_WL_V1.6.0
+```
+
+The resulting structure should be:
+
+```text
+your_base_folder/
+│
+├── STM32WL_CM0_RADIO_BARE_METAL/
+│
+└── STM32Cube_FW_WL_V1.6.0/
+```
+
+### 3. Build
+
+Navigate into the project:
+
+```bash
+cd STM32WL_CM0_RADIO_BARE_METAL
+```
+
+Build the firmware:
+
+```bash
 make
 ```
 
-### 4. Flash to Target
-Upload the compiled binary to your microcontoller by running:
+The build produces:
+
+```text
+build/
+├── cm0plus_radio_main.elf
+├── cm0plus_radio_main.bin
+└── cm0plus_radio_main.map
+```
+
+### 4. Flash
+
+Flash the CM0+ firmware using:
+
 ```bash
 make flash
 ```
 
+The firmware is programmed into the CM0+ flash region:
+
+```text
+0x08020000
+```
+
 ## 📺 Monitoring Output
-Connect your serial terminal monitor (like PuTTY, Tera Term, or the Serial Monitor inside VS Code) to the allocated COM port using these parameters:
-* **Baud Rate:** 115200 (Default)
-* **Data Bits:** 8
-* **Parity:** None
-* **Stop Bits:** 1
+
+Connect the board to a serial terminal such as:
+
+- PuTTY
+- Tera Term
+- VS Code Serial Monitor
+
+Use the following serial configuration:
+
+| Parameter | Configuration |
+|---|---|
+| Baud Rate | 115200 |
+| Data Bits | 8 |
+| Parity | None |
+| Stop Bits | 1 |
+| Flow Control | None |
+
+After opening the serial terminal, the firmware should display:
+
+```text
+================================
+ STM32WL55JC2 CM0+ BARE-METAL
+================================
+1. Send 0xAA for CW @ 18 WPM
+Waiting to receive CMD.....
+```
+
+Send:
+
+```text
+AA
+```
+
+as a hexadecimal byte.
+
+The firmware should then start the CW transmission sequence.
+
+## 🧩 Architecture
+
+The firmware is structured approximately as:
+
+```text
+                    STM32WL55JC2
+                 ┌─────────────────┐
+                 │                 │
+                 │   Cortex-M4     |
+                 |    (NUTTX)      │    
+                 ├─────────────────┤
+                 │   Cortex-M0+    │
+                 │                 │
+                 │  Bare-Metal FW  │
+                 └────────┬────────┘
+                          │
+                          ▼
+                   Radio Interface
+                          │
+                          ▼
+                   SUBGHZ / HAL
+                          │
+                          ▼
+                    STM32WL Radio
+                          │
+                          ▼
+                     CW Output
+```
