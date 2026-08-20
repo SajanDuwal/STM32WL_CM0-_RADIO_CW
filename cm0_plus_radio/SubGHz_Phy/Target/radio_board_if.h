@@ -1,21 +1,21 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file    radio_board_if.h
-  * @author  MCD Application Team
-  * @brief   Header for Radio interface configuration
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2026 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file    radio_board_if.h
+ * @author  MCD Application Team
+ * @brief   Header for Radio interface configuration
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2024 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
@@ -42,13 +42,33 @@ extern "C" {
 #define RBI_CONF_RFO_HP     RADIO_CONF_RFO_HP
 #else
 /* USER CODE BEGIN Board Definition */
+#define RF_SW_CTRL3_PIN                          GPIO_PIN_3
+#define RF_SW_CTRL3_GPIO_PORT                    GPIOC
+#define RF_SW_CTRL3_GPIO_CLK_ENABLE()            __HAL_RCC_GPIOC_CLK_ENABLE()
+#define RF_SW_CTRL3_GPIO_CLK_DISABLE()           __HAL_RCC_GPIOC_CLK_DISABLE()
 
+#define RF_SW_CTRL1_PIN                          GPIO_PIN_4
+#define RF_SW_CTRL1_GPIO_PORT                    GPIOC
+#define RF_SW_CTRL1_GPIO_CLK_ENABLE()            __HAL_RCC_GPIOC_CLK_ENABLE()
+#define RF_SW_RX_GPIO_CLK_DISABLE()              __HAL_RCC_GPIOC_CLK_DISABLE()
+
+#define RF_SW_CTRL2_PIN                          GPIO_PIN_5
+#define RF_SW_CTRL2_GPIO_PORT                    GPIOC
+#define RF_SW_CTRL2_GPIO_CLK_ENABLE()            __HAL_RCC_GPIOC_CLK_ENABLE()
+#define RF_SW_CTRL2_GPIO_CLK_DISABLE()           __HAL_RCC_GPIOC_CLK_DISABLE()
+
+#define RF_TCXO_VCC_PIN                          GPIO_PIN_0
+#define RF_TCXO_VCC_GPIO_PORT                    GPIOB
+#define RF_TCXO_VCC_CLK_ENABLE()                 __HAL_RCC_GPIOB_CLK_ENABLE()
+#define RF_TCXO_VCC_CLK_DISABLE()                __HAL_RCC_GPIOB_CLK_DISABLE()
 /* USER CODE END Board Definition */
 #define RBI_CONF_RFO_LP_HP  0
 #define RBI_CONF_RFO_LP     1
 #define RBI_CONF_RFO_HP     2
 /* USER CODE BEGIN Board Definition_2 */
-
+#define RADIO_CONF_RFO_LP_HP  0
+#define RADIO_CONF_RFO_LP     1
+#define RADIO_CONF_RFO_HP     2
 /* USER CODE END Board Definition_2 */
 #endif  /* USE_BSP_DRIVER  */
 
@@ -89,12 +109,17 @@ extern "C" {
 
 #else
 /* USER CODE BEGIN Exported PinMapping */
-#warning user to provide its board definitions pins
+// #warning user to provide its board definitions pins
 /* USER CODE END Exported PinMapping */
 #endif  /* USE_BSP_DRIVER  */
 
 /* USER CODE BEGIN ED */
-
+typedef enum {
+	RADIO_SWITCH_OFF = 0,
+	RADIO_SWITCH_RX = 1,
+	RADIO_SWITCH_RFO_LP = 2,
+	RADIO_SWITCH_RFO_HP = 3,
+} BSP_RADIO_Switch_TypeDef;
 /* USER CODE END ED */
 
 /* Exported types ------------------------------------------------------------*/

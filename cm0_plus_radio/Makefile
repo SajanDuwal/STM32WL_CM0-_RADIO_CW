@@ -94,6 +94,7 @@ stm32_hal/stm32wlxx_hal.c \
 stm32_hal/stm32wlxx_hal_rcc.c \
 stm32_hal/stm32wlxx_hal_subghz.c \
 stm32_hal/stm32wlxx_hal_cortex.c \
+stm32_hal/stm32wlxx_hal_gpio.c \
 subghz/subghz.c \
 SubGHz_Phy/App/app_subghz_phy.c \
 staff/sys_app.c \

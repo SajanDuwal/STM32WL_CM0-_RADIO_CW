@@ -69,6 +69,17 @@ int main(void)
         }
         memset(uart2_rx_buffer, 0, sizeof(uart2_rx_buffer));
         uart2_rx_buffer_index = 0;
+
+        // static uint8_t k = 0;
+        // uint8_t s[] = {k, 0x11, 0xB1, 0x1C, 0xFF};
+
+        // for (int i = 0; i < sizeof(s); i++)
+        // {
+        //     serial2_print("%02X ", s[i]);
+        // }
+        // serial2_println("");
+        // k++;    
+        // delay_ms(1000U);   // 1sec delay
     }
     return 0;
 }

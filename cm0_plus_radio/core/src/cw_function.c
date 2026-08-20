@@ -10,10 +10,19 @@
 void cw_on() {
 	SUBGRF_SetStandby(STDBY_RC);
 	SUBGRF_ClearIrqStatus(IRQ_RADIO_ALL);
-	SUBGRF_SetPaConfig(0x04, 0x07, 0x00, 0x01);
-	SUBGRF_SetTxParams(RFO_HP, 5, RADIO_RAMP_200_US);
-	SUBGRF_SetRfFrequency(435500000);
-	SUBGRF_SetTxContinuousWave();
+
+		// LOW POWER 14.5dbm
+    SUBGRF_SetPaConfig(0x07, 0x00, 0x01, 0x01);
+    SUBGRF_SetTxParams(RFO_LP, 0x16, 0x04);
+    SUBGRF_SetSwitch(RFO_LP, RFSWITCH_TX); 
+
+		// HIGH PWER 22dbm
+    // SUBGRF_SetPaConfig(0x04, 0x07, 0x00, 0x01);
+    // SUBGRF_SetTxParams(RFO_HP, 0x16, 0x04);
+    // SUBGRF_SetSwitch(RFO_HP, RFSWITCH_TX);
+
+    SUBGRF_SetRfFrequency(402375000);
+    SUBGRF_SetTxContinuousWave();
 }
 
 void cw_off() {
